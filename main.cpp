@@ -6,21 +6,47 @@
 #include <pico/bootrom.h>
 #include <hardware/watchdog.h>
 
-#include "pico/stdlib.h"
+#include "Side_LEDs.h"
+
+const uint8_t SIDE_LED_PIN = 15;
 
 //const uint LED_PIN = PICO_DEFAULT_LED_PIN;
 char* readBuf;
 uint8_t readIndex;
 
-static repeating_timer_t updateTimer;
-
 bool power = true;
 bool on;
+
+Side_LEDs *side_leds;
 
 void handleCommand(char *buf, uint8_t length) {
     if (strncasecmp(buf, "flash", length) == 0) {
         printf("Entering Bootloader\n");
         reset_usb_boot(0, 0);
+        return;
+    }
+
+    if (strncasecmp(buf, "clear", length) == 0) {
+        printf("Clearing Neopixels\n");
+        side_leds->Clear();
+        return;
+    }
+
+    if (strncasecmp(buf, "red", length) == 0) {
+        printf("Setting Neopixels\n");
+        side_leds->StartCycle(128, 0, 0, 0, 0, 2, 24);
+        return;
+    }
+
+    if (strncasecmp(buf, "green", length) == 0) {
+        printf("Setting Neopixels\n");
+        side_leds->StartCycle(0, 128, 0, 0, 0, 2, 24);
+        return;
+    }
+
+    if (strncasecmp(buf, "blue", length) == 0) {
+        printf("Setting Neopixels\n");
+        side_leds->StartCycle(0, 0, 128, 0, 0, 2, 24);
         return;
     }
 }
@@ -42,16 +68,13 @@ int main() {
 
     watchdog_enable(5000, true);
 
+    printf("Starting on pin %i...\n", SIDE_LED_PIN);
+    stdio_flush();
+
+    side_leds = new Side_LEDs(SIDE_LED_PIN);
+
     readBuf = (char*)malloc(100 * sizeof(char));
     readIndex = 0;
-
-/*    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);*/
-
-    uint8_t column, row;
-    column = 0;
-    row = 0;
-    bool clear = false;
 
     while (true) {
         watchdog_update();

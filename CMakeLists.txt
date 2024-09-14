@@ -20,18 +20,21 @@ pico_sdk_init()
 
 # Add your source files
 add_executable(${NAME}
+        Side_LEDs.cpp
         main.cpp
 )
 
+add_subdirectory(pico_neopixels)
+
 target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-# Include required libraries
-# This assumes `pimoroni-pico` is stored alongside your project
+target_compile_definitions(${NAME} PRIVATE PICO_DEBUG_MALLOC=1)
 
 # Don't forget to link the libraries you need!
 target_link_libraries(${NAME}
     pico_stdlib
     pico_malloc
     pico_mem_ops
+    pico_neopixel
 )
 
 # create map/bin/hex file etc.
