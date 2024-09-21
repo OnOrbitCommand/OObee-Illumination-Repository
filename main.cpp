@@ -54,7 +54,7 @@ void handleCommand(char *buf, uint8_t length) {
 int main() {
     stdio_usb_init();
 
-    while(!stdio_usb_connected());
+//    while(!stdio_usb_connected());
 
     sleep_ms(500);
 
@@ -72,6 +72,8 @@ int main() {
     stdio_flush();
 
     side_leds = new Side_LEDs(SIDE_LED_PIN);
+
+    side_leds->StartCycle(0, 128, 0, 0, 0, 2, 24);
 
     readBuf = (char*)malloc(100 * sizeof(char));
     readIndex = 0;
