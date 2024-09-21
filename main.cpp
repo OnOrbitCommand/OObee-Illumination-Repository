@@ -54,12 +54,11 @@ void handleCommand(char *buf, uint8_t length) {
 int main() {
     stdio_usb_init();
 
-//    while(!stdio_usb_connected());
-
     sleep_ms(500);
 
     if (watchdog_enable_caused_reboot()) {
-        printf("Entering Bootloader\n");
+        while(!stdio_usb_connected());
+        printf("Watchdog reboot! Entering Bootloader\n");
         stdio_flush();
         sleep_ms(1000);
         reset_usb_boot(0, 0);
@@ -71,7 +70,7 @@ int main() {
     printf("Starting on pin %i...\n", SIDE_LED_PIN);
     stdio_flush();
 
-    side_leds = new Side_LEDs(SIDE_LED_PIN);
+    side_leds = new Side_LEDs(SIDE_LED_PIN, 48);
 
     side_leds->StartCycle(0, 128, 0, 0, 0, 2, 24);
 

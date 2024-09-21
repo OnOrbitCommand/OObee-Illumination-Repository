@@ -1,0 +1,3 @@
+[submodule "pico_neopixels"]
+	path = pico_neopixels
+	url = https://github.com/lordmortis/pi-pico-adafruit-neopixels.git

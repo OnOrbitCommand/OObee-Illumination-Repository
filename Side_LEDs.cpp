@@ -6,10 +6,10 @@
 
 #include <cstdio>
 
-const uint8_t Num_Pixels = 48;
+//const uint8_t Num_Pixels = 48;
 const neoPixelType Pixel_Type = NEO_GRB + NEO_KHZ800;
 
-Adafruit_NeoPixel predefined_pixels(Num_Pixels, 15, Pixel_Type);
+//Adafruit_NeoPixel predefined_pixels(Num_Pixels, 15, Pixel_Type);
 
 static repeating_timer_t updateTimer;
 
@@ -19,8 +19,9 @@ bool update(repeating_timer_t* timer) {
     return instance->Update();
 }
 
-Side_LEDs::Side_LEDs(uint8_t data_pin) {
-    raw_pixels = &predefined_pixels;
+Side_LEDs::Side_LEDs(uint8_t data_pin, uint8_t Num_Pixels) {
+    num_Pixels = Num_Pixels;
+    raw_pixels = new Adafruit_NeoPixel(num_Pixels, data_pin, Pixel_Type);
     raw_pixels->begin();
 }
 
@@ -28,14 +29,14 @@ void Side_LEDs::StartCycle(
         uint8_t r, uint8_t g, uint8_t b,
         uint8_t start_left, uint8_t start_right, uint8_t newWidth, uint8_t ledPerSecond) {
     cycling = true;
-    if (start_left == 0 || start_left > (Num_Pixels >> 1) - 1) {
-        cycle_pos_side_1 = (Num_Pixels >> 1) - 1;
+    if (start_left == 0 || start_left > (num_Pixels >> 1) - 1) {
+        cycle_pos_side_1 = (num_Pixels >> 1) - 1;
     } else {
         cycle_pos_side_1 = start_left - 1;
     }
 
-    if (start_right == 0 || start_right > (Num_Pixels >> 1) - 1) {
-        cycle_pos_side_2 = (Num_Pixels >> 1) - 1;
+    if (start_right == 0 || start_right > (num_Pixels >> 1) - 1) {
+        cycle_pos_side_2 = (num_Pixels >> 1) - 1;
     } else {
         cycle_pos_side_2 = start_right - 1;
     }
@@ -52,7 +53,7 @@ void Side_LEDs::StartCycle(
 bool Side_LEDs::Update() {
     if (!cycling) return false;
     cycle_pos_side_1++; cycle_pos_side_2++;
-    uint8_t side_width = (Num_Pixels >> 1);
+    uint8_t side_width = (num_Pixels >> 1);
     if (cycle_pos_side_1 >= side_width) cycle_pos_side_1 = 0;
     if (cycle_pos_side_2 >= side_width) cycle_pos_side_2 = 0;
     raw_pixels->clear();

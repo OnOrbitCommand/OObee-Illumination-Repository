@@ -27,7 +27,6 @@ add_executable(${NAME}
 add_subdirectory(pico_neopixels)
 
 target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-target_compile_definitions(${NAME} PRIVATE PICO_DEBUG_MALLOC=1)
 
 # Don't forget to link the libraries you need!
 target_link_libraries(${NAME}
