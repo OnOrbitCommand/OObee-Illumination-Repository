@@ -8,9 +8,8 @@
 
 #include "Side_LEDs.h"
 
-const uint8_t SIDE_LED_PIN = 15;
+const uint8_t SIDE_LED_PIN = 26;
 
-//const uint LED_PIN = PICO_DEFAULT_LED_PIN;
 char* readBuf;
 uint8_t readIndex;
 
